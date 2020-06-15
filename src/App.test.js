@@ -10,7 +10,14 @@ import App from "./App";
 import ContactForm from "./components/ContactForm";
 
 let container = null;
+let user = null;
 beforeEach(() => {
+	user = {
+		firstName: "Raul",
+		lastName: "Flores",
+		email: "email@email.com",
+		message: "This is a message!",
+	};
 	// setup a DOM element as a render target
 	container = document.createElement("div");
 	document.body.appendChild(container);
@@ -23,6 +30,7 @@ afterEach(() => {
 	// container = null;
 	document.body.removeChild(container);
 	container = null;
+	user = null;
 });
 
 test("renders App without crashing", () => {
@@ -32,7 +40,6 @@ test("renders App without crashing", () => {
 });
 
 test("first name input works correctly", () => {
-	const user = { firstName: "Raul" };
 	const { getByLabelText } = render(<ContactForm />, container);
 
 	const firstName = getByLabelText(/first name*/i);
@@ -44,8 +51,7 @@ test("first name input works correctly", () => {
 	expect(firstName.value).toBe("Raul");
 });
 
-test("last name inpput works correctly", () => {
-	const user = { lastName: "Flores" };
+test("last name input works correctly", () => {
 	const { getByLabelText } = render(<ContactForm />, container);
 
 	const lastName = getByLabelText(/last name*/i);
@@ -56,25 +62,41 @@ test("last name inpput works correctly", () => {
 	expect(lastName.value).toBe("Flores");
 });
 
-// test("error message on first name input works correctly", () => {
-// 	const user = { firstName: "Raul" };
-// 	const { getByLabelText, getByTestId } = render(
-// 		<ContactForm />,
-// 		container
-// 	);
+test("email input is working correctly", () => {
+	const { getByLabelText } = render(<ContactForm />, container);
 
-// 	const firstName = getByLabelText(/first name/i);
-// 	expect(firstName).toBeInTheDocument;
-// 	expect(firstName.value).toBe("");
+	const email = getByLabelText(/email*/i);
+	expect(email).toBeInTheDocument;
 
-// 	fireEvent.change(firstName, { target: { value: user.firstName } });
-// 	expect(firstName.value).toBe("Raul");
+	fireEvent.change(email, { target: { value: user.email } });
 
-// 	const error = getByTestId(
-// 		"Looks like there was an error: {errors.firstName.type}"
-// 	);
-// 	expect(error).not.toBeInTheDocument;
-// });
+	expect(email.value).toBe("email@email.com");
+});
+
+test("message input is working correctly", () => {
+	const { getByLabelText } = render(<ContactForm />, container);
+
+	const message = getByLabelText(/message/i);
+	expect(message).toBeInTheDocument;
+
+	fireEvent.change(message, { target: { value: user.message } });
+	expect(message.value).toBe("This is a message!");
+});
+
+test("error message on first name input works correctly", () => {
+	const { getByLabelText, getByTestId } = render(<ContactForm />, container);
+
+	const firstName = getByLabelText(/first name/i);
+	expect(firstName).toBeInTheDocument;
+	expect(firstName.value).toBe("");
+
+	fireEvent.change(firstName, { target: { value: user.firstName } });
+	expect(firstName.value).toBe("Raul");
+
+	// const error = getByTestId("errorFiNa");
+
+	// expect(error).toThrowError;
+});
 
 // test("onSubmit is called with all fields filled when button is clicked", () => {
 // 	const user = {
